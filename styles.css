@@ -1,0 +1,140 @@
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+  background-color: #050223;
+  width: 100%;
+  color: aliceblue;
+}
+
+.container {
+  width: 25rem;
+  margin: 0 auto;
+}
+
+.title {
+  font-family: "Roboto Serif", serif;
+  font-weight: 600;
+  font-size: 2rem;
+  margin: 2.5rem auto;
+}
+
+.change {
+  display: none;
+  width: 15rem;
+  margin: 0 auto 1rem;
+  text-align: left;
+}
+
+.form-div {
+  margin-bottom: 1.5rem;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-cash {
+  width: 15rem;
+  padding: 0 0.6rem;
+  margin-top: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.input-cash,
+.purchase-btn {
+  font: inherit;
+  height: 2rem;
+}
+.purchase-btn {
+  width: 9rem;
+  font-weight: bold;
+  border-width: 2px;
+  background-color: #f5deb3;
+  border-color: #bdb76b;
+}
+
+.cash-drawer-div {
+  width: 20rem;
+  margin: 0 auto;
+  border: 2px solid #f5deb32a;
+}
+
+.center-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.total-price {
+  height: 3rem;
+  width: 15rem;
+  background-color: #f5deb3;
+}
+
+.total {
+  background-color: #333;
+  height: 1.5rem;
+  width: 90%;
+  padding-top: 3px;
+  margin: 0 auto;
+}
+
+.link {
+  background-color: #f5deb3;
+  height: 3rem;
+  width: 3rem;
+  margin-left: 2rem;
+}
+
+.drawer {
+  border-radius: 2rem 2rem 0 0;
+  background-color: #f5deb3;
+  border: 0.5rem solid #f5deb3a7;
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cubes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 5px;
+  height: max-content;
+}
+
+.object {
+  height: 1rem;
+  width: 1rem;
+  background-color: #333;
+}
+
+.Change-in-drawer {
+  width: 60%;
+  text-align: left;
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 1rem 1rem 0.5rem;
+}
+
+.bottom {
+  background-color: #f5deb3;
+  width: 100%;
+  height: 3rem;
+}
+
+.circle {
+  border-radius: 50%;
+}

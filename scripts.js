@@ -4,6 +4,7 @@ const cash = document.getElementById("cash");
 const purchaseBtn = document.getElementById("purchase-btn");
 const spanEl = document.querySelectorAll(".Change-in-drawer > p span");
 const spanArray = Array.from(spanEl);
+
 let price = 1.87;
 let cid = [
   ["PENNY", 1.01],
@@ -17,10 +18,10 @@ let cid = [
   ["ONE HUNDRED", 100],
 ];
 const monetaryValues = [100, 20, 10, 5, 1, 0.25, 0.1, 0.05, 0.01];
-let chandeDueArray = [];
-
+let changeDueArray = [];
 let usedMonetaryIndices = [];
 let selectedArray = [];
+let roundChangeToGive = 0;
 
 const calculateChange = (changeAmount) => {
   if (changeAmount <= 0) {
@@ -30,40 +31,56 @@ const calculateChange = (changeAmount) => {
       (number, index) =>
         number <= changeAmount && !usedMonetaryIndices.includes(index)
     );
-    console.log(selectedMonetaryValue);
+
     cid.reverse();
     let selectedIndex = monetaryValues.indexOf(selectedMonetaryValue);
-    console.log(selectedIndex);
-
-    cid[selectedIndex][1] -= parseFloat(selectedMonetaryValue);
-
-    cid[selectedIndex][1] = parseFloat(cid[selectedIndex][1].toFixed(2));
-    console.log(cid[selectedIndex][1]);
-    selectedArray.push([cid[selectedIndex][0], selectedMonetaryValue]);
-    if (cid[selectedIndex][1] === 0) {
-      usedMonetaryIndices.push(selectedIndex);
+    let remainderCid = 0;
+    let roundRemainder = 0;
+    for (let i = selectedIndex; i < cid.length; i++) {
+      remainderCid += parseFloat(cid[i][1]);
     }
-    cid.reverse();
+    roundRemainder = parseFloat(remainderCid.toFixed(2));
 
-    changeAmount = parseFloat(
-      (changeAmount - selectedMonetaryValue).toFixed(2)
-    );
-    calculateChange(changeAmount);
+    if (roundRemainder >= changeAmount) {
+      cid[selectedIndex][1] -= parseFloat(selectedMonetaryValue);
+
+      cid[selectedIndex][1] = parseFloat(cid[selectedIndex][1].toFixed(2));
+
+      selectedArray.push([cid[selectedIndex][0], selectedMonetaryValue]);
+      if (cid[selectedIndex][1] === 0) {
+        usedMonetaryIndices.push(selectedIndex);
+      }
+      cid.reverse();
+      changeAmount = parseFloat(
+        (changeAmount - selectedMonetaryValue).toFixed(2)
+      );
+      calculateChange(changeAmount);
+    } else {
+      cid.reverse();
+    }
   }
 };
-const updateResult = (originalArray) => {
+
+const updateResult = (originalArray, num) => {
+  calculateChange(num);
   for (let i = 0; i < originalArray.length; i++) {
-    const existing = chandeDueArray.find(
+    const existing = changeDueArray.find(
       (item) => item[0] === originalArray[i][0]
     );
     if (!existing) {
-      chandeDueArray.unshift(originalArray[i]);
+      changeDueArray.unshift(originalArray[i]);
     } else {
-      chandeDueArray[0][1] += parseFloat(originalArray[i][1]);
-      chandeDueArray[0][1] = parseFloat(chandeDueArray[0][1].toFixed(2));
+      changeDueArray[0][1] += parseFloat(originalArray[i][1]);
+      changeDueArray[0][1] = parseFloat(changeDueArray[0][1].toFixed(2));
     }
   }
-  chandeDueArray = chandeDueArray.reverse();
+
+  changeDueArray = changeDueArray.reverse();
+  let changeToGive = 0;
+  for (let i = 0; i < changeDueArray.length; i++) {
+    changeToGive += parseFloat(changeDueArray[i][1]);
+  }
+  roundChangeToGive += parseFloat(changeToGive.toFixed(2));
 };
 
 const statusChecker = (number) => {
@@ -74,33 +91,42 @@ const statusChecker = (number) => {
   }
   const roundTotal = parseFloat(total.toFixed(2));
 
+  const check = () => {
+    updateResult(selectedArray, number);
+    changeDue.style.textAlign = "left";
+    changeDue.style.width = "160px";
+    if (roundChangeToGive === number) {
+      changeDueArray.forEach(
+        ([string, num]) =>
+          (changeDue.innerText += `
+    ${string}: $${num}`)
+      );
+    } else {
+      changeDue.style.width = "220px";
+
+      changeDue.style.textAlign = "center";
+
+      changeDue.innerText = `Status: ${statusArray[0]}`;
+    }
+  };
+
   changeDue.style.display = "block";
   if (roundTotal < number) {
     changeDue.innerText = `Status: ${statusArray[0]}`;
+    changeDue.style.textAlign = "center";
+    changeDue.style.width = "220px";
   } else if (roundTotal === number) {
     changeDue.innerText = `Status: ${statusArray[1]}`;
-    calculateChange(number);
-    updateResult(selectedArray);
-    chandeDueArray.forEach(
-      ([string, number]) =>
-        (changeDue.innerText += `
-      ${string}: $${number}`)
-    );
+    check();
   } else if (roundTotal > number) {
-    calculateChange(number);
-    updateResult(selectedArray);
     changeDue.innerText = `Status: ${statusArray[2]}`;
-    chandeDueArray.forEach(
-      ([string, number]) =>
-        (changeDue.innerText += `
-      ${string}: $${number}`)
-    );
+    check();
   }
 };
 
 const checkValue = (value) => {
   value = parseFloat(cash.value);
-  console.log(value);
+
   if (value < price) {
     alert("Customer does not have enough money to purchase the item");
   } else if (value === price) {
@@ -113,9 +139,11 @@ const checkValue = (value) => {
       element.innerText = `$${cid[index][1]}`;
     });
   }
+
   cash.value = "";
   selectedArray = [];
-  chandeDueArray = [];
+  changeDueArray = [];
+  roundChangeToGive = 0;
 };
 
 inputForm.addEventListener("submit", (e) => {

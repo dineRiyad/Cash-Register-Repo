@@ -28,10 +28,7 @@ body {
 
 .change-due {
   display: none;
-  width: 30%;
   margin: 0 auto 1rem;
-  text-align: left;
-  border: 2px solid rgb(152, 127, 127);
 }
 
 .form-div {

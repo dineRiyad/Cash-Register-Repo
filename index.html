@@ -14,15 +14,16 @@
   <body>
     <main class="container">
       <h1 class="title">Cash Register Project</h1>
-      <div class="change" id="change"></div>
+      <div class="change-due" id="change-due"></div>
       <div class="form-div" id="form-div">
         <form class="flex" id="input-cash-form">
-          <label for="input-cash">Enter cash from customer:</label>
+          <label for="cash">Enter cash from customer:</label>
           <input
             type="number"
             name="input-cash"
             class="input-cash"
-            id="input-cash" />
+            id="cash"
+            step="any" />
           <button type="button" class="purchase-btn" id="purchase-btn">
             Purchase
           </button>
@@ -30,7 +31,7 @@
       </div>
       <div class="cash-drawer-div">
         <div class="total-price center-flex" id="total-price">
-          <p class="total">Total: $3.26</p>
+          <p class="total">Total: $1.87</p>
         </div>
         <div class="link"></div>
         <div class="drawer">
@@ -47,15 +48,15 @@
           </div>
           <div class="Change-in-drawer" id="Change-in-drawer">
             <p>Change in drawer</p>
-            <p>Pennies: $0.89</p>
-            <p>Nickels: $2.05</p>
-            <p>Dimes: $2.7</p>
-            <p>Quarters: $2.75</p>
-            <p>Ones: $86</p>
-            <p>Fives: $55</p>
-            <p>Tens: $20</p>
-            <p>Twenties: $60</p>
-            <p>Hundreds: $100</p>
+            <p>Pennies: <span>$1.01</span></p>
+            <p>Nickels: <span>$2.05</span></p>
+            <p>Dimes: <span>$3.1</span></p>
+            <p>Quarters: <span>$4.25</span></p>
+            <p>Ones: <span>$90</span></p>
+            <p>Fives: <span>$55</span></p>
+            <p>Tens: <span>$20</span></p>
+            <p>Twenties: <span>$60</span></p>
+            <p>Hundreds: <span>$100</span></p>
           </div>
         </div>
         <div class="bottom center-flex">

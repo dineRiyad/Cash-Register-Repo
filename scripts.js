@@ -23,6 +23,8 @@ let usedMonetaryIndices = [];
 let selectedArray = [];
 let roundChangeToGive = 0;
 
+const valueSelector = () => {};
+
 const calculateChange = (changeAmount) => {
   if (changeAmount <= 0) {
     return;
@@ -40,21 +42,48 @@ const calculateChange = (changeAmount) => {
       remainderCid += parseFloat(cid[i][1]);
     }
     roundRemainder = parseFloat(remainderCid.toFixed(2));
-
     if (roundRemainder >= changeAmount) {
-      cid[selectedIndex][1] -= parseFloat(selectedMonetaryValue);
+      if (cid[selectedIndex][1]) {
+        cid[selectedIndex][1] -= parseFloat(selectedMonetaryValue);
 
-      cid[selectedIndex][1] = parseFloat(cid[selectedIndex][1].toFixed(2));
+        cid[selectedIndex][1] = parseFloat(cid[selectedIndex][1].toFixed(2));
 
-      selectedArray.push([cid[selectedIndex][0], selectedMonetaryValue]);
-      if (cid[selectedIndex][1] === 0) {
-        usedMonetaryIndices.push(selectedIndex);
+        selectedArray.push([cid[selectedIndex][0], selectedMonetaryValue]);
+        if (cid[selectedIndex][1] === 0) {
+          usedMonetaryIndices.push(selectedIndex);
+        }
+        cid.reverse();
+        changeAmount = parseFloat(
+          (changeAmount - selectedMonetaryValue).toFixed(2)
+        );
+        calculateChange(changeAmount);
+      } else {
+        let nextIndex;
+        for (let i = selectedIndex + 1; i < monetaryValues.length; i++) {
+          if (cid[i][1] !== 0) {
+            nextIndex = i;
+            break;
+          }
+        }
+
+        if (nextIndex !== undefined) {
+          selectedMonetaryValue = monetaryValues[nextIndex];
+          selectedIndex = nextIndex;
+
+          cid[selectedIndex][1] -= parseFloat(selectedMonetaryValue);
+
+          cid[selectedIndex][1] = parseFloat(cid[selectedIndex][1].toFixed(2));
+          selectedArray.push([cid[selectedIndex][0], selectedMonetaryValue]);
+          if (cid[selectedIndex][1] === 0) {
+            usedMonetaryIndices.push(selectedIndex);
+          }
+          cid.reverse();
+          changeAmount = parseFloat(
+            (changeAmount - selectedMonetaryValue).toFixed(2)
+          );
+          calculateChange(changeAmount);
+        }
       }
-      cid.reverse();
-      changeAmount = parseFloat(
-        (changeAmount - selectedMonetaryValue).toFixed(2)
-      );
-      calculateChange(changeAmount);
     } else {
       cid.reverse();
     }
@@ -133,7 +162,7 @@ const checkValue = (value) => {
     changeDue.style.display = "block";
     changeDue.textContent = "No change due - customer paid with exact cash";
   } else if (value > price) {
-    valueDue = parseFloat((value - price).toFixed(2));
+    const valueDue = parseFloat((value - price).toFixed(2));
     statusChecker(valueDue);
     spanArray.forEach((element, index) => {
       element.innerText = `$${cid[index][1]}`;

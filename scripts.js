@@ -42,21 +42,26 @@ const calculateChange = (changeAmount) => {
       remainderCid += parseFloat(cid[i][1]);
     }
     roundRemainder = parseFloat(remainderCid.toFixed(2));
+
+    const process = () => {
+      cid[selectedIndex][1] -= parseFloat(selectedMonetaryValue);
+
+      cid[selectedIndex][1] = parseFloat(cid[selectedIndex][1].toFixed(2));
+
+      selectedArray.push([cid[selectedIndex][0], selectedMonetaryValue]);
+      if (cid[selectedIndex][1] === 0) {
+        usedMonetaryIndices.push(selectedIndex);
+      }
+      cid.reverse();
+      changeAmount = parseFloat(
+        (changeAmount - selectedMonetaryValue).toFixed(2)
+      );
+      calculateChange(changeAmount);
+    };
+
     if (roundRemainder >= changeAmount) {
       if (cid[selectedIndex][1]) {
-        cid[selectedIndex][1] -= parseFloat(selectedMonetaryValue);
-
-        cid[selectedIndex][1] = parseFloat(cid[selectedIndex][1].toFixed(2));
-
-        selectedArray.push([cid[selectedIndex][0], selectedMonetaryValue]);
-        if (cid[selectedIndex][1] === 0) {
-          usedMonetaryIndices.push(selectedIndex);
-        }
-        cid.reverse();
-        changeAmount = parseFloat(
-          (changeAmount - selectedMonetaryValue).toFixed(2)
-        );
-        calculateChange(changeAmount);
+        process();
       } else {
         let nextIndex;
         for (let i = selectedIndex + 1; i < monetaryValues.length; i++) {
@@ -69,20 +74,8 @@ const calculateChange = (changeAmount) => {
         if (nextIndex !== undefined) {
           selectedMonetaryValue = monetaryValues[nextIndex];
           selectedIndex = nextIndex;
-
-          cid[selectedIndex][1] -= parseFloat(selectedMonetaryValue);
-
-          cid[selectedIndex][1] = parseFloat(cid[selectedIndex][1].toFixed(2));
-          selectedArray.push([cid[selectedIndex][0], selectedMonetaryValue]);
-          if (cid[selectedIndex][1] === 0) {
-            usedMonetaryIndices.push(selectedIndex);
-          }
-          cid.reverse();
-          changeAmount = parseFloat(
-            (changeAmount - selectedMonetaryValue).toFixed(2)
-          );
-          calculateChange(changeAmount);
         }
+        process();
       }
     } else {
       cid.reverse();
